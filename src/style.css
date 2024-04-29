@@ -21,32 +21,72 @@ body {
 
 #header {
   grid-area: header;
+  border-style: solid;
   display: flex;
   align-items: center;
-  gap: 15px;
-  border-style: dashed;
+  gap: 5px;
   background-color: #FFCC70;
 }
 
-img {
+#header>img {
   height: 120px;
   width: 120px;
+  padding: 10px;
 }
 
 #sidebar {
   grid-area: sidebar;
+  border-style: solid;
+  border-top: none;
   display: flex;
   flex-direction: column;
+  gap: 10px;
   text-align: center;
-  border-style: dashed;
   background-color: #8ECDDD;
 }
 
-hr{
+.fadebar {
   margin: 0;
+  margin-top: -20px;
+  border: 0;
+  height: 1px;
+  background: #333;
+  background: -webkit-linear-gradient(left, hsla(0, 0%, 0%, 0) 0%, hsla(0, 0%, 0%, .75) 50%, hsla(0, 0%, 0%, 0) 100%);
+  background: -moz-linear-gradient(left, hsla(0, 0%, 0%, 0) 0%, hsla(0, 0%, 0%, .75) 50%, hsla(0, 0%, 0%, 0) 100%);
+  background: -ms-linear-gradient(left, hsla(0, 0%, 0%, 0) 0%, hsla(0, 0%, 0%, .75) 50%, hsla(0, 0%, 0%, 0) 100%);
+  background: -o-linear-gradient(left, hsla(0, 0%, 0%, 0) 0%, hsla(0, 0%, 0%, .75) 50%, hsla(0, 0%, 0%, 0) 100%);
+  background: linear-gradient(left, hsla(0, 0%, 0%, 0) 0%, hsla(0, 0%, 0%, .75) 50%, hsla(0, 0%, 0%, 0) 100%);
+}
+
+.projectButtons{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sidebarButton {
+  margin: 0px 10px;
+  background-color: transparent;
+  border: 0;
+  text-align: left;
+  font-size:large;
+}
+
+.sidebarImg {
+  height: 35px;
+  width: 35px;
+}
+
+.sidebarX{
+  height: 15px;
+  width: 15px;
+  position: absolute;
+  transform: translate(90px,5px);
 }
 
 #main {
   grid-area: main-content;
-  border-style: dashed;
+  border-style: solid;
+  border-left: none;
+  border-top: none;
 }
