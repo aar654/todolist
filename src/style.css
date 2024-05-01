@@ -59,6 +59,9 @@ body {
 }
 
 .sidebarButton {
+  display: flex;
+  align-items: center;
+  gap: 5px;
   width: 235px;
   margin: 0px 10px;
   background-color: transparent;
@@ -79,8 +82,7 @@ body {
 .sidebarX {
   height: 15px;
   width: 15px;
-  position: absolute;
-  transform: translate(90px, 5px);
+  margin-left: auto;
 }
 
 #main {
@@ -94,11 +96,35 @@ body {
 .projectTasks {
   display: flex;
   flex-direction: column;
+  gap: 10px;
   border: solid;
   margin: 0px 400px;
 }
 
-.projectButton{
+.projectButton {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  border: none;
+  border-radius: 0;
   background-color: transparent;
   font-size: large;
+}
+
+.projectX {
+  height: 15px;
+  width: 15px;
+}
+
+.projectTime {
+  margin-left: auto;
+}
+
+.addTask {
+  display: flex;
+  gap: 5px;
+  justify-content: center;
+  align-items: center;
+  background-color: transparent;
+  border: 0;
 }
