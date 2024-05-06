@@ -137,10 +137,16 @@ body {
   border: 0;
 }
 
-.addTask{
-  display: none;
-  flex-direction: column;
-  align-content: center;
-  margin: 0px 250px;
-  gap: 5px;
+.modal-body{
+  display: grid; 
+  grid-template: 1fr 1fr / 1fr;
+  text-align:left;
 }
+
+.modal-content{
+  background-color: #FFCEE0;
+}
+
+.modal-header, .modal-footer{
+  border-color: black;
+  }
