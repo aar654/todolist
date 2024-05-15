@@ -73,6 +73,22 @@ body {
   text-overflow: ellipsis;
 }
 
+.sideButton {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  width: 235px;
+  margin: 0px 10px;
+  background-color: transparent;
+  border: 0;
+  text-align: left;
+  font-size: large;
+  position: relative;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
 .sidebarImg {
   height: 35px;
   width: 35px;
