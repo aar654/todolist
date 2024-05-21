@@ -6,7 +6,8 @@ const thisWeek = document.getElementById("thisWeek");
 const addProject = document.getElementById("addProject");
 const projectList = document.getElementById("projectList");
 const sidebarButton = document.querySelectorAll(".sidebarButton");
-let headerMain = document.getElementById("headerMain");
+let mainHeader = document.getElementById("mainHeader");
+const addTask = document.getElementById("addTask");
 
 let projects = [];
 
@@ -41,7 +42,6 @@ class Task {
 
 
 addProject.addEventListener("submit", function (e) {
-    e.preventDefault();
 
     const projectButton = document.createElement("button");
     const img = document.createElement("img");
@@ -57,25 +57,26 @@ addProject.addEventListener("submit", function (e) {
     projectButton.appendChild(projectTitle)
     projectButton.appendChild(x);
     projectList.appendChild(projectButton);
-    projectButton.addEventListener("click", function(){
-        displayProjects();
+
+    projectButton.addEventListener("click", function () {
+        displayProjects(projectButton.dataset.index);
 
     })
 
     let newProject = new Project(document.getElementById('addProjectValue').value);
     projects.push(newProject);
 
+    projectButton.dataset.index = projects.length - 1;
+
+
     document.getElementById('addProjectValue').value = "";
-    
+
     console.log(projects);
+
+    e.preventDefault();
 
 });
 
-for (let i = 0; i < sidebarButton.length; i++) {
-    sidebarButton[i].addEventListener("click", function () {
-        displayProjects();
-    })
-}
 
 let exampleProject = new Project("Example Project");
 let task1 = new Task("Example", "Example Description", "12/23/2024", true)
@@ -85,6 +86,42 @@ projects.push(exampleProject);
 console.log(projects)
 
 
-function displayProjects() {
-    headerMain.innerHTML("hello");
+function displayProjects(projectIndex) {
+    if (projectIndex !== undefined) {
+        const project = projects[projectIndex];
+        mainHeader.innerHTML = project.title;
+
+        
+    } else {
+        mainHeader.innerHTML = "";
+    }
 }
+
+addTask.addEventListener("submit", function (e) {
+    let projectTasks = document.getElementById("projectTasks");
+
+    const taskButton = document.createElement("button");
+    const checkbox = document.createElement("input");
+    check.type = "checkbox";
+    const taskTitle = document.createElement("span");
+    const taskDescription = document.createElement("span");
+    const taskDate = document.createElement("input");
+    taskDate.type = "date";
+    const x = document.createElement("img");
+    x.src = "/dist/img/close.png";
+    taskDescription.classList.add("description");
+
+    taskButton.appendChild(checkbox);
+    taskButton.appendChild(taskTitle);
+    taskButton.appendChild(taskDescription);
+    taskButton.appendChild(x);
+
+    projectTasks.appendChild(taskButton);
+
+    console.log(projects);
+
+    e.preventDefault();
+
+
+});
+
