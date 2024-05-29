@@ -129,14 +129,26 @@ body {
   margin: 0px 400px;
 }
 
-.projectButton {
-  display: flex;
-  justify-content: space-between;
-  gap: 10px;
-  border: none;
-  border-radius: 0;
+.projectContainer {
+  display: grid;
+  grid-template-rows: auto;
+  grid-template-columns: 1fr 1fr;
   background-color: transparent;
   font-size: large;
+}
+
+.marginLeft{
+  display:flex;
+  align-items: baseline;
+  gap: 5px;
+  margin-right: auto;
+}
+
+.marginRight{
+  display:flex;
+  align-items: baseline;
+  gap: 5px;  
+  margin-left: auto
 }
 
 .projectX {
@@ -144,11 +156,7 @@ body {
   width: 15px;
 }
 
-.projectTime {
-  margin-left: auto;
-}
-
-.description{
+.description {
   font-size: small;
 }
 
