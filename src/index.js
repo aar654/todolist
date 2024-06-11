@@ -1,17 +1,15 @@
 import './style.css';
-import {isToday, isThisWeek} from "date-fns";
+import { isToday, isThisWeek } from "date-fns";
 
 const allTasks = document.getElementById("allTasks");
 const today = document.getElementById("today");
 const thisWeek = document.getElementById("thisWeek");
 const addProject = document.getElementById("addProject");
 const projectList = document.getElementById("projectList");
-const sidebarButton = document.querySelectorAll(".sidebarButton");
 let mainHeader = document.getElementById("mainHeader");
 const addTask = document.getElementById("addTask");
-let projectButton = document.querySelectorAll(".projectButton");
+const projectTasks = document.getElementById("projectTasks");
 
-let projects = [];
 
 class Project {
     constructor(title) {
@@ -41,6 +39,36 @@ class Task {
     }
 }
 
+let projects = [new Project("Example Project")];
+projects[0].addTasks(new Task("Example Task Title", "Example Description", "2024-05-28", false));
+
+let firstProjectButton = document.createElement("button");
+const img = document.createElement("img");
+const x = document.createElement("img");
+let projectTitle = document.createElement("span");
+
+img.src = "/dist/img/list.png";
+x.src = "/dist/img/close.png";
+x.classList.add("sidebarX");
+img.classList.add("sidebarImg");
+firstProjectButton.classList.add("btn", "btn-light", "sidebarButton", "projectButton");
+projectTitle.textContent = projects[0].title;
+firstProjectButton.appendChild(img);
+firstProjectButton.appendChild(projectTitle);
+firstProjectButton.appendChild(x);
+projectList.appendChild(firstProjectButton);
+
+firstProjectButton.dataset.index = 0;
+
+x.addEventListener("click", function (e) {
+    projects.splice(0, 1);
+    projectList.removeChild(firstProjectButton);
+    projectTasks.innerHTML = "";
+    console.log(projects);
+});
+
+displayProject();
+
 addProject.addEventListener("submit", function (e) {
     e.preventDefault();
 
@@ -62,7 +90,15 @@ addProject.addEventListener("submit", function (e) {
     let newProject = new Project(document.getElementById('addProjectValue').value);
     projects.push(newProject);
 
-    projectButton.dataset.index = projects.length - 1;
+    let index = projects.length - 1;
+    projectButton.dataset.index = index;
+
+    x.addEventListener("click", function (e) {
+        projects.splice(index, 1);
+        projectList.removeChild(projectButton);
+        projectTasks.innerHTML = "";
+        console.log(projects);
+    });
 
     document.getElementById('addProjectValue').value = "";
 
@@ -71,12 +107,29 @@ addProject.addEventListener("submit", function (e) {
     console.log(projects);
 });
 
-let exampleProject = new Project("Example Project");
+/* let exampleProject = new Project("Example Project");
 let task1 = new Task("Example Task Title", "Example Description", "2024-05-28", false);
 exampleProject.addTasks(task1);
-projects.push(exampleProject);
+projects.push(exampleProject); */
 
-console.log(projects);
+function displayProject() {
+    let projectButtons = document.querySelectorAll(".projectButton");
+
+    projectButtons.forEach(button => {
+        button.addEventListener("click", function () {
+            let index = this.getAttribute("data-index");
+            if (index !== undefined && projects[index]) {
+                const project = projects[index];
+                mainHeader.innerHTML = project.title;
+                displayProjectTasks(project.getTasks());
+                document.querySelector(".addTaskButton").style.display = "flex";
+            } else {
+                mainHeader.innerHTML = "No Project Found";
+                document.querySelector(".addTaskButton").style.display = "none"
+            }
+        });
+    });
+}
 
 addTask.addEventListener("submit", function (e) {
     e.preventDefault();
@@ -92,7 +145,6 @@ addTask.addEventListener("submit", function (e) {
             document.getElementById('taskDate').value,
             false
         );
-
         currentProject.addTasks(newTask);
 
         displayProjectTasks(currentProject.getTasks());
@@ -109,7 +161,6 @@ addTask.addEventListener("submit", function (e) {
 });
 
 function displayProjectTasks(tasks) {
-    const projectTasks = document.getElementById("projectTasks");
     projectTasks.innerHTML = "";
 
     tasks.forEach(task => {
@@ -139,7 +190,7 @@ function displayProjectTasks(tasks) {
 
         const x = document.createElement("img");
         x.src = "/dist/img/close.png";
-        x.classList.add("projectX");
+        x.classList.add("taskX");
 
         left.appendChild(checkbox);
         left.appendChild(taskTitle);
@@ -154,25 +205,10 @@ function displayProjectTasks(tasks) {
     });
 }
 
-function displayProject() {
-    let projectButton = document.querySelectorAll(".projectButton");
-
-    projectButton.forEach(button => {
-        button.addEventListener("click", function () {
-            let index = this.getAttribute("data-index");
-            if (index !== undefined && projects[index]) {
-                const project = projects[index];
-                mainHeader.innerHTML = project.title;
-                displayProjectTasks(project.getTasks());
-            } else {
-                mainHeader.innerHTML = "No Project Found";
-            }
-        });
-    });
-}
-
-allTasks.addEventListener("click", function (){
+allTasks.addEventListener("click", function () {
     mainHeader.innerHTML = "All Tasks";
+
+    document.querySelector(".addTaskButton").style.display = "none"
 
     let allTasksList = [];
     projects.forEach(project => {
@@ -180,10 +216,14 @@ allTasks.addEventListener("click", function (){
     });
 
     displayProjectTasks(allTasksList);
+
+
 });
 
-today.addEventListener("click", function (){
+today.addEventListener("click", function () {
     mainHeader.innerHTML = "Today";
+
+    document.querySelector(".addTaskButton").style.display = "none"
 
     let todayTasks = [];
 
@@ -192,11 +232,12 @@ today.addEventListener("click", function (){
     });
 
     displayProjectTasks(todayTasks);
-
 });
 
-thisWeek.addEventListener("click", function (){
+thisWeek.addEventListener("click", function () {
     mainHeader.innerHTML = "This Week";
+
+    document.querySelector(".addTaskButton").style.display = "none"
 
     let thisWeekTasks = [];
 
@@ -206,5 +247,6 @@ thisWeek.addEventListener("click", function (){
 
     displayProjectTasks(thisWeekTasks);
 });
+
 
 displayProject();
