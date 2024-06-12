@@ -183,3 +183,7 @@ body {
 .modal-footer {
   border-color: black;
 }
+
+.strikethrough {
+  text-decoration: line-through;
+}

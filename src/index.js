@@ -1,5 +1,5 @@
 import './style.css';
-import { isToday, isThisWeek } from "date-fns";
+import {parseISO, isToday, isThisWeek } from "date-fns";
 
 const allTasks = document.getElementById("allTasks");
 const today = document.getElementById("today");
@@ -40,7 +40,8 @@ class Task {
 }
 
 let projects = [new Project("Example Project")];
-projects[0].addTasks(new Task("Example Task Title", "Example Description", "2024-05-28", false));
+projects[0].addTasks(new Task("Example Task Title", "Example Description", "2024-06-11", false));
+projects[0].addTasks(new Task("Example Task Title 2", "Example Description", "2024-06-12", true));
 
 let firstProjectButton = document.createElement("button");
 const img = document.createElement("img");
@@ -68,6 +69,8 @@ x.addEventListener("click", function (e) {
 });
 
 displayProject();
+firstProjectButton.click();
+console.log(projects);
 
 addProject.addEventListener("submit", function (e) {
     e.preventDefault();
@@ -107,11 +110,6 @@ addProject.addEventListener("submit", function (e) {
     console.log(projects);
 });
 
-/* let exampleProject = new Project("Example Project");
-let task1 = new Task("Example Task Title", "Example Description", "2024-05-28", false);
-exampleProject.addTasks(task1);
-projects.push(exampleProject); */
-
 function displayProject() {
     let projectButtons = document.querySelectorAll(".projectButton");
 
@@ -125,6 +123,7 @@ function displayProject() {
                 document.querySelector(".addTaskButton").style.display = "flex";
             } else {
                 mainHeader.innerHTML = "No Project Found";
+                projectTasks.innerHTML = "No tasks available";
                 document.querySelector(".addTaskButton").style.display = "none"
             }
         });
@@ -163,6 +162,11 @@ addTask.addEventListener("submit", function (e) {
 function displayProjectTasks(tasks) {
     projectTasks.innerHTML = "";
 
+    if (tasks.length === 0) {
+        projectTasks.innerHTML = "No tasks available";
+        return;
+    }
+
     tasks.forEach(task => {
         const left = document.createElement("div");
         const right = document.createElement("div");
@@ -184,6 +188,11 @@ function displayProjectTasks(tasks) {
         taskDescription.textContent = `(${task.taskDescription})`;
         taskDescription.classList.add("description");
 
+        if (task.check) {
+            taskTitle.classList.add("strikethrough");
+            taskDescription.classList.add("strikethrough");
+        }
+
         const taskDate = document.createElement("input");
         taskDate.type = "date";
         taskDate.value = task.dueDate;
@@ -191,6 +200,8 @@ function displayProjectTasks(tasks) {
         const x = document.createElement("img");
         x.src = "/dist/img/close.png";
         x.classList.add("taskX");
+
+        taskButton.dataset.taskTitle = task.task;
 
         left.appendChild(checkbox);
         left.appendChild(taskTitle);
@@ -202,49 +213,52 @@ function displayProjectTasks(tasks) {
         taskButton.appendChild(right);
 
         projectTasks.appendChild(taskButton);
+
+        checkbox.addEventListener("click", function () {
+            task.check = checkbox.checked;
+            taskTitle.classList.toggle("strikethrough", task.check);
+            taskDescription.classList.toggle("strikethrough", task.check);
+        });
+
+        x.addEventListener("click", function () {
+            let currentProjectTitle = mainHeader.innerText;
+            let currentProject = projects.find(project => project.title === currentProjectTitle);
+
+            if (currentProject) {
+                currentProject.removeTask(task.task);
+                displayProjectTasks(currentProject.getTasks());
+            }
+        });
     });
 }
 
 allTasks.addEventListener("click", function () {
     mainHeader.innerHTML = "All Tasks";
-
     document.querySelector(".addTaskButton").style.display = "none"
-
     let allTasksList = [];
     projects.forEach(project => {
         allTasksList = allTasksList.concat(project.getTasks());
     });
-
     displayProjectTasks(allTasksList);
-
-
 });
 
 today.addEventListener("click", function () {
     mainHeader.innerHTML = "Today";
-
     document.querySelector(".addTaskButton").style.display = "none"
-
     let todayTasks = [];
-
     projects.forEach(project => {
-        todayTasks = todayTasks.concat(project.getTasks().filter(task => isToday(task.dueDate)));
+        todayTasks = todayTasks.concat(project.getTasks().filter(task => isToday(parseISO(task.dueDate))));
     });
-
     displayProjectTasks(todayTasks);
 });
 
 thisWeek.addEventListener("click", function () {
     mainHeader.innerHTML = "This Week";
-
     document.querySelector(".addTaskButton").style.display = "none"
-
     let thisWeekTasks = [];
-
     projects.forEach(project => {
         thisWeekTasks = thisWeekTasks.concat(project.getTasks().filter(task => isThisWeek(task.dueDate)));
     });
-
     displayProjectTasks(thisWeekTasks);
 });
 
