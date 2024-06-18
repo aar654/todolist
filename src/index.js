@@ -1,5 +1,5 @@
 import './style.css';
-import {parseISO, isToday, isThisWeek } from "date-fns";
+import { parseISO, isToday, isThisWeek } from "date-fns";
 
 const allTasks = document.getElementById("allTasks");
 const today = document.getElementById("today");
@@ -9,7 +9,6 @@ const projectList = document.getElementById("projectList");
 let mainHeader = document.getElementById("mainHeader");
 const addTask = document.getElementById("addTask");
 const projectTasks = document.getElementById("projectTasks");
-
 
 class Project {
     constructor(title) {
@@ -40,22 +39,26 @@ class Task {
 }
 
 let projects = [new Project("Example Project")];
-projects[0].addTasks(new Task("Example Task Title", "Example Description", "2024-06-11", false));
-projects[0].addTasks(new Task("Example Task Title 2", "Example Description", "2024-06-12", true));
+projects[0].addTasks(new Task("Example Task Title", "Example Description", "2024-06-17", false));
+projects[0].addTasks(new Task("Example Task Title 2", "Example Description", "2024-06-18", true));
 
 let firstProjectButton = document.createElement("button");
 const img = document.createElement("img");
 const x = document.createElement("img");
+const edit = document.createElement("img");
 let projectTitle = document.createElement("span");
 
 img.src = "/dist/img/list.png";
 x.src = "/dist/img/close.png";
 x.classList.add("sidebarX");
+edit.src = "/dist/img/edit.png";
+edit.classList.add("sidebarEdit");
 img.classList.add("sidebarImg");
 firstProjectButton.classList.add("btn", "btn-light", "sidebarButton", "projectButton");
 projectTitle.textContent = projects[0].title;
 firstProjectButton.appendChild(img);
 firstProjectButton.appendChild(projectTitle);
+firstProjectButton.appendChild(edit);
 firstProjectButton.appendChild(x);
 projectList.appendChild(firstProjectButton);
 
@@ -68,6 +71,32 @@ x.addEventListener("click", function (e) {
     console.log(projects);
 });
 
+edit.addEventListener("click", function (e) {
+    e.preventDefault();
+    const inputField = document.createElement("input");
+    inputField.type = "text";
+    inputField.value = projects[0].title;
+    inputField.classList.add("projectInput");
+    firstProjectButton.replaceChild(inputField, projectTitle);
+    function updateProjectTitle(newTitle) {
+        projects[0].title = newTitle;
+        projectTitle.textContent = newTitle;
+        firstProjectButton.replaceChild(projectTitle, inputField);
+        mainHeader.innerHTML = newTitle;
+    }
+
+    inputField.addEventListener("blur", function () {
+        updateProjectTitle(inputField.value);
+    });
+
+    inputField.addEventListener("keypress", function (e) {
+        if (e.key === "Enter") {
+            updateProjectTitle(inputField.value);
+            inputField.blur();
+        }
+    });
+});
+
 displayProject();
 firstProjectButton.click();
 console.log(projects);
@@ -78,15 +107,19 @@ addProject.addEventListener("submit", function (e) {
     let projectButton = document.createElement("button");
     const img = document.createElement("img");
     const x = document.createElement("img");
+    const edit = document.createElement("img");
     let projectTitle = document.createElement("span");
     img.src = "/dist/img/list.png";
     x.src = "/dist/img/close.png";
+    edit.src = "/dist/img/edit.png";
+    edit.classList.add("sidebarX");
     x.classList.add("sidebarX");
     img.classList.add("sidebarImg");
     projectButton.classList.add("btn", "btn-light", "sidebarButton", "projectButton");
     projectTitle.textContent = document.getElementById('addProjectValue').value;
     projectButton.appendChild(img);
     projectButton.appendChild(projectTitle);
+    projectButton.appendChild(edit);
     projectButton.appendChild(x);
     projectList.appendChild(projectButton);
 
@@ -101,6 +134,32 @@ addProject.addEventListener("submit", function (e) {
         projectList.removeChild(projectButton);
         projectTasks.innerHTML = "";
         console.log(projects);
+    });
+
+    edit.addEventListener("click", function (e) {
+        e.preventDefault();
+        const inputField = document.createElement("input");
+        inputField.type = "text";
+        inputField.value = projects[index].title;
+        inputField.classList.add("projectInput");
+        projectButton.replaceChild(inputField, projectTitle);
+        function updateProjectTitle(newTitle) {
+            projects[index].title = newTitle;
+            projectTitle.textContent = newTitle;
+            projectButton.replaceChild(projectTitle, inputField);
+            mainHeader.innerHTML = newTitle;
+        }
+
+        inputField.addEventListener("blur", function () {
+            updateProjectTitle(inputField.value);
+        });
+
+        inputField.addEventListener("keypress", function (e) {
+            if (e.key === "Enter") {
+                updateProjectTitle(inputField.value);
+                inputField.blur();
+            }
+        });
     });
 
     document.getElementById('addProjectValue').value = "";
@@ -197,6 +256,10 @@ function displayProjectTasks(tasks) {
         taskDate.type = "date";
         taskDate.value = task.dueDate;
 
+        const edit = document.createElement("img")
+        edit.src = "/dist/img/edit.png";
+        edit.classList.add("taskX");
+
         const x = document.createElement("img");
         x.src = "/dist/img/close.png";
         x.classList.add("taskX");
@@ -207,6 +270,7 @@ function displayProjectTasks(tasks) {
         left.appendChild(taskTitle);
         left.appendChild(taskDescription);
         right.appendChild(taskDate);
+        right.appendChild(edit);
         right.appendChild(x);
 
         taskButton.appendChild(left);
@@ -229,6 +293,10 @@ function displayProjectTasks(tasks) {
                 displayProjectTasks(currentProject.getTasks());
             }
         });
+    });
+
+    edit.addEventListener("click", function () {
+
     });
 }
 

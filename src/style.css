@@ -59,15 +59,12 @@ body {
 
 .sidebarButton {
   display: flex;
-  align-items: center;
   gap: 5px;
   width: 235px;
   margin: 0px 10px;
   background-color: transparent;
   border: 0;
-  text-align: left;
   font-size: large;
-  position: relative;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -75,7 +72,6 @@ body {
 
 .sideButton {
   display: flex;
-  align-items: center;
   gap: 5px;
   width: 235px;
   margin: 0px 10px;
@@ -90,11 +86,17 @@ body {
 }
 
 .sidebarImg {
-  height: 35px;
-  width: 35px;
+  height: 25px;
+  width: 25px;
 }
 
 .sidebarX {
+  height: 15px;
+  width: 15px;
+  margin-left: auto;
+}
+
+.sidebarEdit{
   height: 15px;
   width: 15px;
   margin-left: auto;
@@ -111,6 +113,10 @@ body {
 
 .inputText {
   grid-column: span 2;
+}
+
+.projectInput{
+  width:150px;
 }
 
 #main {
@@ -148,7 +154,7 @@ body {
   display:flex;
   align-items: baseline;
   gap: 5px;  
-  margin-left: auto
+  margin-left: auto;
 }
 
 .taskX {
