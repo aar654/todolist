@@ -162,6 +162,11 @@ body {
   width: 15px;
 }
 
+.editTask {
+  height: 15px;
+  width: 15px;
+}
+
 .description {
   font-size: small;
 }

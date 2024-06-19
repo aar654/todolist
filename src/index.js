@@ -1,5 +1,5 @@
 import './style.css';
-import { parseISO, isToday, isThisWeek } from "date-fns";
+import {parseISO, isToday, isThisWeek } from "date-fns";
 
 const allTasks = document.getElementById("allTasks");
 const today = document.getElementById("today");
@@ -218,7 +218,8 @@ addTask.addEventListener("submit", function (e) {
     }
 });
 
-function displayProjectTasks(tasks) {
+function displayProjectTasks(tasks, projectIndex) {
+    const projectTasks = document.getElementById('projectTasks'); 
     projectTasks.innerHTML = "";
 
     if (tasks.length === 0) {
@@ -226,7 +227,7 @@ function displayProjectTasks(tasks) {
         return;
     }
 
-    tasks.forEach(task => {
+    tasks.forEach((task) => {
         const left = document.createElement("div");
         const right = document.createElement("div");
         left.classList.add("marginLeft");
@@ -256,9 +257,11 @@ function displayProjectTasks(tasks) {
         taskDate.type = "date";
         taskDate.value = task.dueDate;
 
-        const edit = document.createElement("img")
+        const edit = document.createElement("img");
         edit.src = "/dist/img/edit.png";
-        edit.classList.add("taskX");
+        edit.classList.add("editTask");
+        edit.setAttribute("data-bs-toggle", "modal");
+        edit.setAttribute("data-bs-target", "#editTaskModal");
 
         const x = document.createElement("img");
         x.src = "/dist/img/close.png";
@@ -290,13 +293,37 @@ function displayProjectTasks(tasks) {
 
             if (currentProject) {
                 currentProject.removeTask(task.task);
-                displayProjectTasks(currentProject.getTasks());
+                displayProjectTasks(currentProject.getTasks(), projectIndex);
             }
         });
-    });
 
-    edit.addEventListener("click", function () {
+        edit.addEventListener("click", function () {
+            document.getElementById('editTaskTitle').value = task.task;
+            document.getElementById('editTaskDescription').value = task.taskDescription;
+            document.getElementById('editTaskDate').value = task.dueDate;
+        
+            document.getElementById('editTaskSubmit').addEventListener("click", function (e) {
+                e.preventDefault();
+                const updatedTaskTitle = document.getElementById('editTaskTitle').value;
+                const updatedTaskDescription = document.getElementById('editTaskDescription').value;
+                const updatedTaskDate = document.getElementById('editTaskDate').value;
 
+                task.task = updatedTaskTitle;
+                task.taskDescription = updatedTaskDescription;
+                task.dueDate = updatedTaskDate;
+        
+                taskTitle.textContent = updatedTaskTitle;
+                taskDescription.textContent = `(${updatedTaskDescription})`;
+                taskDate.value = updatedTaskDate;
+
+                document.getElementById('editTaskModal').classList.remove('show');
+                document.getElementById('editTaskModal').setAttribute('aria-hidden', 'true');
+                document.body.classList.remove('modal-open');
+                document.querySelector('.modal-backdrop').remove();   
+                console.log(projects)
+            });
+        });
+                  
     });
 }
 
