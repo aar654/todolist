@@ -1,5 +1,5 @@
 import './style.css';
-import {parseISO, isToday, isThisWeek } from "date-fns";
+import { parseISO, isToday, isThisWeek } from "date-fns";
 
 const allTasks = document.getElementById("allTasks");
 const today = document.getElementById("today");
@@ -47,6 +47,10 @@ const img = document.createElement("img");
 const x = document.createElement("img");
 const edit = document.createElement("img");
 let projectTitle = document.createElement("span");
+const left = document.createElement("div");
+const right = document.createElement("div");
+left.classList.add("marginLeft");
+right.classList.add("marginRight");
 
 img.src = "/dist/img/list.png";
 x.src = "/dist/img/close.png";
@@ -56,10 +60,12 @@ edit.classList.add("sidebarEdit");
 img.classList.add("sidebarImg");
 firstProjectButton.classList.add("btn", "btn-light", "sidebarButton", "projectButton");
 projectTitle.textContent = projects[0].title;
-firstProjectButton.appendChild(img);
-firstProjectButton.appendChild(projectTitle);
-firstProjectButton.appendChild(edit);
-firstProjectButton.appendChild(x);
+left.appendChild(img)
+left.appendChild(projectTitle)
+right.append(edit)
+right.append(x)
+firstProjectButton.append(left)
+firstProjectButton.append(right)
 projectList.appendChild(firstProjectButton);
 
 firstProjectButton.dataset.index = 0;
@@ -68,7 +74,6 @@ x.addEventListener("click", function (e) {
     projects.splice(0, 1);
     projectList.removeChild(firstProjectButton);
     projectTasks.innerHTML = "";
-    console.log(projects);
 });
 
 edit.addEventListener("click", function (e) {
@@ -77,11 +82,11 @@ edit.addEventListener("click", function (e) {
     inputField.type = "text";
     inputField.value = projects[0].title;
     inputField.classList.add("projectInput");
-    firstProjectButton.replaceChild(inputField, projectTitle);
+    left.replaceChild(inputField, projectTitle);
     function updateProjectTitle(newTitle) {
         projects[0].title = newTitle;
         projectTitle.textContent = newTitle;
-        firstProjectButton.replaceChild(projectTitle, inputField);
+        left.replaceChild(projectTitle, inputField);
         mainHeader.innerHTML = newTitle;
     }
 
@@ -99,7 +104,6 @@ edit.addEventListener("click", function (e) {
 
 displayProject();
 firstProjectButton.click();
-console.log(projects);
 
 addProject.addEventListener("submit", function (e) {
     e.preventDefault();
@@ -109,18 +113,24 @@ addProject.addEventListener("submit", function (e) {
     const x = document.createElement("img");
     const edit = document.createElement("img");
     let projectTitle = document.createElement("span");
+    const left = document.createElement("div");
+    const right = document.createElement("div");
     img.src = "/dist/img/list.png";
     x.src = "/dist/img/close.png";
     edit.src = "/dist/img/edit.png";
     edit.classList.add("sidebarX");
     x.classList.add("sidebarX");
     img.classList.add("sidebarImg");
+    left.classList.add("marginLeft");
+    right.classList.add("marginRight");
     projectButton.classList.add("btn", "btn-light", "sidebarButton", "projectButton");
     projectTitle.textContent = document.getElementById('addProjectValue').value;
-    projectButton.appendChild(img);
-    projectButton.appendChild(projectTitle);
-    projectButton.appendChild(edit);
-    projectButton.appendChild(x);
+    left.appendChild(img);
+    left.appendChild(projectTitle);
+    right.appendChild(edit);
+    right.appendChild(x);
+    projectButton.append(left)
+    projectButton.append(right)
     projectList.appendChild(projectButton);
 
     let newProject = new Project(document.getElementById('addProjectValue').value);
@@ -129,11 +139,10 @@ addProject.addEventListener("submit", function (e) {
     let index = projects.length - 1;
     projectButton.dataset.index = index;
 
-    x.addEventListener("click", function (e) {
+    x.addEventListener("click", function () {
         projects.splice(index, 1);
         projectList.removeChild(projectButton);
         projectTasks.innerHTML = "";
-        console.log(projects);
     });
 
     edit.addEventListener("click", function (e) {
@@ -142,11 +151,11 @@ addProject.addEventListener("submit", function (e) {
         inputField.type = "text";
         inputField.value = projects[index].title;
         inputField.classList.add("projectInput");
-        projectButton.replaceChild(inputField, projectTitle);
+        left.replaceChild(inputField, projectTitle);
         function updateProjectTitle(newTitle) {
             projects[index].title = newTitle;
             projectTitle.textContent = newTitle;
-            projectButton.replaceChild(projectTitle, inputField);
+            left.replaceChild(projectTitle, inputField);
             mainHeader.innerHTML = newTitle;
         }
 
@@ -165,8 +174,6 @@ addProject.addEventListener("submit", function (e) {
     document.getElementById('addProjectValue').value = "";
 
     displayProject();
-
-    console.log(projects);
 });
 
 function displayProject() {
@@ -219,7 +226,7 @@ addTask.addEventListener("submit", function (e) {
 });
 
 function displayProjectTasks(tasks, projectIndex) {
-    const projectTasks = document.getElementById('projectTasks'); 
+    const projectTasks = document.getElementById('projectTasks');
     projectTasks.innerHTML = "";
 
     if (tasks.length === 0) {
@@ -301,7 +308,7 @@ function displayProjectTasks(tasks, projectIndex) {
             document.getElementById('editTaskTitle').value = task.task;
             document.getElementById('editTaskDescription').value = task.taskDescription;
             document.getElementById('editTaskDate').value = task.dueDate;
-        
+
             document.getElementById('editTaskSubmit').addEventListener("click", function (e) {
                 e.preventDefault();
                 const updatedTaskTitle = document.getElementById('editTaskTitle').value;
@@ -311,7 +318,7 @@ function displayProjectTasks(tasks, projectIndex) {
                 task.task = updatedTaskTitle;
                 task.taskDescription = updatedTaskDescription;
                 task.dueDate = updatedTaskDate;
-        
+
                 taskTitle.textContent = updatedTaskTitle;
                 taskDescription.textContent = `(${updatedTaskDescription})`;
                 taskDate.value = updatedTaskDate;
@@ -319,13 +326,16 @@ function displayProjectTasks(tasks, projectIndex) {
                 document.getElementById('editTaskModal').classList.remove('show');
                 document.getElementById('editTaskModal').setAttribute('aria-hidden', 'true');
                 document.body.classList.remove('modal-open');
-                document.querySelector('.modal-backdrop').remove();   
-                console.log(projects)
+                document.querySelector('.modal-backdrop').remove();
             });
         });
-                  
+
+        taskDate.addEventListener("change", function () {
+            task.dueDate = taskDate.value;
+        });
     });
 }
+
 
 allTasks.addEventListener("click", function () {
     mainHeader.innerHTML = "All Tasks";
@@ -356,6 +366,3 @@ thisWeek.addEventListener("click", function () {
     });
     displayProjectTasks(thisWeekTasks);
 });
-
-
-displayProject();
